@@ -68,51 +68,35 @@ public class Employee {
 		return empno;
 	}
 
-
-
 	public void setEmpno(int empno) {
 		this.empno = empno;
 	}
-
-
 
 	@Column(name ="employee_name",length=50,nullable=false)
 	public String getName() {
 		return name;
 	}
 
-
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
 
 	public double getSalary() {
 		return salary;
 	}
 
-
-
 	public void setSalary(double salary) {
 		this.salary = salary;
 	}
-
-
 
 	@Enumerated(EnumType.STRING)
 	public Designation getDesignation() {
 		return designation;
 	}
 
-
-
 	public void setDesignation(Designation designation) {
 		this.designation = designation;
 	}
-
-
 
 	@Override
 	public String toString() {
