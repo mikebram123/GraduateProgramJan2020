@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mastek.hrapp.dao.DepartmentJPADAO;
 import com.mastek.hrapp.dao.EmployeeJPADAO;
+import com.mastek.hrapp.dao.JobPositionsDAO;
 import com.mastek.hrapp.dao.PaymentJPADAO;
 import com.mastek.hrapp.dao.ProjectJPADAO;
 import com.mastek.hrapp.entities.CardPayment;
@@ -14,6 +15,7 @@ import com.mastek.hrapp.entities.ChequePayment;
 import com.mastek.hrapp.entities.Department;
 import com.mastek.hrapp.entities.Designation;
 import com.mastek.hrapp.entities.Employee;
+import com.mastek.hrapp.entities.JobPositions;
 import com.mastek.hrapp.entities.Payment;
 import com.mastek.hrapp.entities.Project;
 import com.mastek.hrapp.services.EmployeeService;
@@ -39,7 +41,56 @@ class HrappApplicationTests {
 	@Autowired
 	PaymentJPADAO paymentDAO;
 	
-	@Test
+	@Autowired
+	JobPositionsDAO jobDAO;
+	
+	//@Test
+	void testAddJobPositionDocument() {
+		JobPositions jp = new JobPositions();
+		jp.setJobId(122);
+		jp.setLocation("Leeds");
+		jp.setClientName("NHS");
+		jp.setSkillsRequired("Java");
+		jp.setNumberOfPositions(3);
+		
+		jp = jobDAO.save(jp);
+		
+		assertNotNull(jp, "Job Positions not Saved");
+	}
+	
+	//@Test
+	void testListAllJobPositions() {
+		System.out.println("Print All Job Positions");
+		for(JobPositions jp : jobDAO.findAll()) {
+			System.out.println(jp);
+		}
+	}
+	
+	//@Test
+	void testFindByEmployeeSalary(){
+		double minSalary = 1000.0;
+		double maxSalary= 5000.0;
+									//empDAO.findBySalary(minSalary, maxSalary)
+		Iterable<Employee> emps = empDAO.findBySalary(minSalary, maxSalary);
+		
+		System.out.println("All Employees having salary between min: "+minSalary + " and max: " + maxSalary);
+		for (Employee employee : emps) {
+			System.out.println(employee);
+		}
+	}
+	
+	//@Test
+	void testFindEmployeesByDesignation() {
+		Iterable<Employee> emps = empDAO.findByDesignation(Designation.MANAGER);
+		
+		System.out.println("All Employees with Designation as "+ Designation.MANAGER);
+		
+		for (Employee employee : emps) {
+			System.out.println(employee);
+		}
+	}
+	
+	//@Test
 	void testCashPaymentAdd() {
 		Payment cashP = new Payment();
 		cashP.setAmount(100);
@@ -50,7 +101,7 @@ class HrappApplicationTests {
 		assertNotNull(cashP, "Cash Payment not Saved");
 	}
 	
-	@Test
+	//@Test
 	void testCardPaymentAdd() {
 		CardPayment cardP = new CardPayment();
 		cardP.setAmount(100);
@@ -63,7 +114,7 @@ class HrappApplicationTests {
 		assertNotNull(cardP,"Card Payment not Saved");
 	}
 	
-	@Test
+	//@Test
 	void testChequePaymentAdd() {
 		ChequePayment cheqP = new ChequePayment();
 		cheqP.setAmount(19230);
@@ -97,6 +148,7 @@ class HrappApplicationTests {
 	//@Test
 	void testListEmployees() {
 		Iterable<Employee> emps = empDAO.findAll();
+		
 		assertNotNull(emps,"Employees not Found");
 		for(Employee employee:emps) {
 			System.out.println(employee);
@@ -172,6 +224,20 @@ class HrappApplicationTests {
 	void testAssignEmployeeToProject() {
 		Employee emp = empSvc.assignEmployeeToProject(14,19);
 		assertTrue(emp.getProjectAssigned().size()>0,"Projects Assigned");
+	}
+	
+	@Test
+	void testApplyForJobPosition() {
+		int jobId = 122;
+		int empno = 11;
+		JobPositions jp = empSvc.applyForJobPosition(jobId, empno);
+		
+		assertNotNull(jp,"Job not Applied");
+		
+		System.out.println("Applications for Job Id: "+jobId);
+		for (Employee applicant : jp.getApplicants()) {
+			System.out.println(applicant);
+		}
 	}
 
 }
