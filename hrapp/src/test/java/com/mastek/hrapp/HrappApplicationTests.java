@@ -7,10 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mastek.hrapp.dao.DepartmentJPADAO;
 import com.mastek.hrapp.dao.EmployeeJPADAO;
+import com.mastek.hrapp.dao.PaymentJPADAO;
 import com.mastek.hrapp.dao.ProjectJPADAO;
+import com.mastek.hrapp.entities.CardPayment;
+import com.mastek.hrapp.entities.ChequePayment;
 import com.mastek.hrapp.entities.Department;
 import com.mastek.hrapp.entities.Designation;
 import com.mastek.hrapp.entities.Employee;
+import com.mastek.hrapp.entities.Payment;
 import com.mastek.hrapp.entities.Project;
 import com.mastek.hrapp.services.EmployeeService;
 
@@ -32,7 +36,46 @@ class HrappApplicationTests {
 	@Autowired
 	ProjectJPADAO projectDAO;
 	
+	@Autowired
+	PaymentJPADAO paymentDAO;
+	
 	@Test
+	void testCashPaymentAdd() {
+		Payment cashP = new Payment();
+		cashP.setAmount(100);
+		
+		cashP = paymentDAO.save(cashP);
+		
+		System.out.println(cashP);
+		assertNotNull(cashP, "Cash Payment not Saved");
+	}
+	
+	@Test
+	void testCardPaymentAdd() {
+		CardPayment cardP = new CardPayment();
+		cardP.setAmount(100);
+		cardP.setCardNumber(111111111113323l);
+		cardP.setCardService("VISA");
+		
+		cardP = paymentDAO.save(cardP);
+		System.out.println(cardP);
+		
+		assertNotNull(cardP,"Card Payment not Saved");
+	}
+	
+	@Test
+	void testChequePaymentAdd() {
+		ChequePayment cheqP = new ChequePayment();
+		cheqP.setAmount(19230);
+		cheqP.setBankName("RBS");
+		cheqP.setChequeNumber(2323232);
+		
+		cheqP=paymentDAO.save(cheqP);
+		System.out.println(cheqP);
+		assertNotNull(cheqP,"Cheque Payment not Saved");
+	}
+	
+	//@Test
 	void testEmployeeServiceExampleMethod() {
 		empSvc.exampleMethod();
 		empSvc1.exampleMethod();
@@ -51,7 +94,7 @@ class HrappApplicationTests {
 		assertNotNull(emp,"Employee Not Added");
 	}
 	
-	@Test
+	//@Test
 	void testListEmployees() {
 		Iterable<Employee> emps = empDAO.findAll();
 		assertNotNull(emps,"Employees not Found");
@@ -71,7 +114,7 @@ class HrappApplicationTests {
 		System.out.println(dep);
 		assertNotNull(dep,"Departement Not Added");
 	}
-	@Test
+	//@Test
 	void testListDepartment() {
 		Iterable<Department> deps = depDAO.findAll();
 		assertNotNull(deps,"Department not Found");
@@ -91,7 +134,7 @@ class HrappApplicationTests {
 		System.out.println(pro);
 		assertNotNull(pro,"Project Not Added");
 	}
-	@Test
+	//@Test
 	void testListProject() {
 		Iterable<Project> pros = projectDAO.findAll();
 		assertNotNull(pros,"Department not Found");
@@ -99,7 +142,7 @@ class HrappApplicationTests {
 			System.out.println(pro);
 		}
 	}
-	@Test
+	//@Test
 	void testUpdateEmployees() {
 		Employee emp = empDAO.findById(1).get();
 		System.out.println("Employee Fetched: "+emp);
@@ -118,14 +161,14 @@ class HrappApplicationTests {
 		empDAO.deleteById(5); //deletes by id
 		
 	}
-	@Test
+	//@Test
 	void testAssignEmployeeToDepartment() {
 		//empSVC.assignEmployeeToDepartment(empno, deptno)
 		Employee emp = empSvc.assignEmployeeToDepartment(4,18);
 		assertNotNull(emp.getCurrentDepartment(),"Department not Assigned");
 	}
 	
-	@Test
+	//@Test
 	void testAssignEmployeeToProject() {
 		Employee emp = empSvc.assignEmployeeToProject(14,19);
 		assertTrue(emp.getProjectAssigned().size()>0,"Projects Assigned");
