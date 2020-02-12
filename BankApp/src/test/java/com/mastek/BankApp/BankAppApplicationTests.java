@@ -9,7 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.mastek.BankApp.dao.AccountJPADAO;
 import com.mastek.BankApp.dao.CustomerJPADAO;
 import com.mastek.BankApp.dao.TransactionJPADAO;
+import com.mastek.BankApp.entities.Account;
 import com.mastek.BankApp.entities.Customer;
+import com.mastek.BankApp.entities.Transaction;
 import com.mastek.BankApp.services.BankAppServices;
 
 @SpringBootTest
@@ -28,7 +30,7 @@ class BankAppApplicationTests {
 	TransactionJPADAO traDAO;
 	
 	
-	@Test
+	//@Test
 	void testAddCustomer() {
 		Customer cus = new Customer();
 		cus.setName("Customer Example");
@@ -41,8 +43,31 @@ class BankAppApplicationTests {
 	
 	//@Test
 	void testAddAccount() {
+		Account acc = new Account();
+		acc.setBankName("RBS");
+		acc.setSortCode(1629l);
 		
+		acc = accDAO.save(acc);
 	}
 	
+	//@Test
+	void testAddTransaction() {
+		Transaction tra = new Transaction();
+		tra.setPaymentType("Visa");
+		tra.setAmount(50.00);
+		
+		tra =traDAO.save(tra);
+	}
+	
+	//@Test
+	void testAssignCustomerToAccount() {
+		Customer cus = banDAO.assignCustomerToAccount(1, 2);	
+	}
+	
+
+	@Test
+	void testAssignTransactionToAccount() {
+		Transaction tra = banDAO.assignTransactionToAccount(3, 2);
+	}
 
 }
