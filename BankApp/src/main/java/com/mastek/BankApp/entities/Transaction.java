@@ -1,6 +1,9 @@
 package com.mastek.BankApp.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,22 +17,26 @@ public class Transaction {
 	private double amount;
 	private String paymentType;
 	
-	private Account LinkedAccount;
+	Account linkedAccount;
 	
-	@ManyToOne //One Employee is associated with one of the many departments 
-	@JoinColumn(name="fk_account_id") //the foreign key Column to store the associate deptno
-	public Account getLinkedAccount() {
-		return LinkedAccount;
-	}
 
-	public void setLinkedAccount(Account linkedAccount) {
-		LinkedAccount = linkedAccount;
-	}
 
 	public Transaction() {
 		// TODO Auto-generated constructor stub
 	}
 
+	@ManyToOne //One Employee is associated with one of the many departments 
+	@JoinColumn(name="fk_account_id") //the foreign key Column to store the associate deptno
+	public Account getLinkedAccount() {
+		return linkedAccount;
+	}
+
+	public void setLinkedAccount(Account linkedAccount) {
+		this.linkedAccount = linkedAccount;
+	}
+
+	@Id //marking the property as primary key for the table
+	@GeneratedValue(strategy=GenerationType.AUTO) //auto numbering configuration as per DB
 	public int getTransactionId() {
 		return transactionId;
 	}

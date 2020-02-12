@@ -5,6 +5,9 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -17,11 +20,11 @@ public class Account {
 	private long sortCode;
 	private String bankName;
 	
-	private Set<Customer> customerAssigned = new HashSet<>();
-	private Set<Transaction> TransactionHistory = new HashSet<>();
+	Set<Customer> customerAssigned = new HashSet<>();
+	Set<Transaction> TransactionHistory = new HashSet<>();
 	
 	
-	@OneToMany(mappedBy="LinkedAccount", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="linkedAccount", cascade=CascadeType.ALL)
 	public Set<Transaction> getTransactionHistory() {
 		return TransactionHistory;
 	}
@@ -43,6 +46,8 @@ public class Account {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Id //marking the property as primary key for the table
+	@GeneratedValue(strategy=GenerationType.AUTO) //auto numbering configuration as per DB
 	public int getAccountId() {
 		return accountId;
 	}

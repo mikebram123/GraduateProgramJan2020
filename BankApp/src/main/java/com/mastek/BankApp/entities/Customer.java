@@ -5,6 +5,9 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -18,7 +21,7 @@ public class Customer {
 	private String name;
 	private String address;
 	
-	private Set<Account> accountAssigned = new HashSet<>();
+	Set<Account> accountAssigned = new HashSet<>();
 	
 
 	@ManyToMany(cascade=CascadeType.ALL) // configure many to many associations for entities
@@ -38,6 +41,8 @@ public class Customer {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Id //marking the property as primary key for the table
+	@GeneratedValue(strategy=GenerationType.AUTO) //auto numbering configuration as per DB
 	public int getCustomerId() {
 		return customerId;
 	}
