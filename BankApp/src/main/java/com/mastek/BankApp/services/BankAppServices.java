@@ -11,9 +11,11 @@ import org.springframework.stereotype.Component;
 import com.mastek.BankApp.dao.AccountJPADAO;
 import com.mastek.BankApp.dao.CustomerJPADAO;
 import com.mastek.BankApp.dao.TransactionJPADAO;
+import com.mastek.BankApp.dao.TransferRequestsJPADAO;
 import com.mastek.BankApp.entities.Account;
 import com.mastek.BankApp.entities.Customer;
 import com.mastek.BankApp.entities.Transaction;
+import com.mastek.BankApp.entities.TransferRequests;
 
 @Component //marking the class as bean to be created
 @Scope("singleton") //singleton:one object used across test cases, prototype: one object per request
@@ -27,6 +29,9 @@ public class BankAppServices {
 	
 	@Autowired
 	TransactionJPADAO traDAO;
+	
+	@Autowired
+	TransferRequestsJPADAO trDAO;
 	
 	public BankAppServices() {
 	}
@@ -64,6 +69,18 @@ public class BankAppServices {
 		accDAO.save(acc);
 		
 		return tra;
+	}
+	
+	@Transactional
+	public TransferRequests assignTRtoTransaction(int transferRequestId, int transactionId) {
+		TransferRequests tr = trDAO.findById(transferRequestId).get();
+		Transaction tra = traDAO.findById(transactionId).get();
+		
+		tr.getTr().add(tra);
+		
+		tr = trDAO.save(tr);
+		
+		return tr;
 	}
 	
 
