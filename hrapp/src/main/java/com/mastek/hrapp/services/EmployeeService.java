@@ -1,13 +1,14 @@
 package com.mastek.hrapp.services;
 
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+
 
 import com.mastek.hrapp.apis.DepartmentAPI;
 import com.mastek.hrapp.apis.EmployeeAPI;
@@ -21,8 +22,7 @@ import com.mastek.hrapp.entities.Employee;
 import com.mastek.hrapp.entities.JobPositions;
 import com.mastek.hrapp.entities.Project;
 
-@Component //marking the class as bean to be created
-@Scope("singleton") //singleton:one object used across test cases, prototype: one object per request
+
 public class EmployeeService implements EmployeeAPI, DepartmentAPI,ProjectAPI{
 
 	String exampleProperty;
@@ -154,6 +154,25 @@ public class EmployeeService implements EmployeeAPI, DepartmentAPI,ProjectAPI{
 		newProject = projectDAO.save(newProject);
 		return newProject;
 	}
+
+	@Override
+	@Transactional //to fetch all collections
+	public Set<Project> getEmployeeProjects(int empno) {
+		Employee currentEmp = empDAO.findById(empno).get();
+		int count = currentEmp.getProjectAssigned().size();
+		System.out.println(count+" Projects found");
+		Set<Project> projects = currentEmp.getProjectAssigned();
+		return projects;
+	}
+
+	@Override
+	@Transactional
+	public Project registerProjectForEmployee(int empno, Project newProject) {
+		newProject= projectDAO.save(newProject);
+		assignEmployeeToProject(empno, newProject.getProjectId());
+		return newProject;
+	}
+	
 	
 	
 }

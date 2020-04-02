@@ -1,5 +1,7 @@
 package com.mastek.BankApp.services;
 
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.transaction.Transactional;
@@ -8,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.mastek.BankApp.api.AccountAPI;
+import com.mastek.BankApp.api.CustomerAPI;
+import com.mastek.BankApp.api.TransactionAPI;
 import com.mastek.BankApp.dao.AccountJPADAO;
 import com.mastek.BankApp.dao.CustomerJPADAO;
 import com.mastek.BankApp.dao.TransactionJPADAO;
@@ -19,7 +24,7 @@ import com.mastek.BankApp.entities.TransferRequests;
 
 @Component //marking the class as bean to be created
 @Scope("singleton") //singleton:one object used across test cases, prototype: one object per request
-public class BankAppServices {
+public class BankAppServices implements AccountAPI, CustomerAPI, TransactionAPI {
 	
 	@Autowired
 	AccountJPADAO accDAO;
@@ -81,6 +86,72 @@ public class BankAppServices {
 		tr = trDAO.save(tr);
 		
 		return tr;
+	}
+
+	@Override
+	public Iterable<Transaction> listAllTransactions() {
+		return traDAO.findAll();
+	}
+
+	@Override
+	public Transaction findByTransactionId(int transactionId) {
+		return traDAO.findById(transactionId).get();
+	}
+
+	@Override
+	public Transaction registerNewTransaction(Transaction newTransaction) {
+		newTransaction = traDAO.save(newTransaction);
+		return newTransaction;
+	}
+
+	@Override
+	public Iterable<Customer> listAllCustomers() {
+		return cusDAO.findAll();
+	}
+
+	@Override
+	public Customer findByCustomerId(int customerId) {
+		return cusDAO.findById(customerId).get();
+	}
+
+	@Override
+	public Customer registerNewCustomer(Customer newCustomer) {
+		newCustomer = cusDAO.save(newCustomer);
+		return newCustomer;
+	}
+
+	@Override
+	public Iterable<Account> listAllAccounts() {
+		return accDAO.findAll();
+	}
+
+	@Override
+	public Account findByAccountId(int accountId) {
+		return accDAO.findById(accountId).get();
+	}
+
+	@Override
+	public Account registerNewAccount(Account newAccount) {
+		newAccount = accDAO.save(newAccount);
+		return newAccount;
+	}
+
+	@Override
+	@Transactional
+	public Set<Account> getCustomerAccounts(int customerId) {
+		Customer currentCus = cusDAO.findById(customerId).get();
+		int count = currentCus.getAccountAssigned().size();
+		System.out.println(count+ " Accounts found");
+		Set<Account> accounts = currentCus.getAccountAssigned();
+		return accounts;
+	}
+
+	@Override
+	@Transactional
+	public Account registerAccountForCustomer(int customerId, Account newAccount) {
+		newAccount = accDAO.save(newAccount);
+		assignCustomerToAccount(customerId, newAccount.getAccountId());
+		return newAccount;
 	}
 	
 

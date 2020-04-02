@@ -10,6 +10,8 @@ public class APIConfig extends ResourceConfig {
 	//configure the service classes using ResourceConfig
 	
 	public APIConfig() {
+		//enable the CORS filter for UI applications to access the service
+		register(CORSFilter.class);
 		// register each service class to enable services as API
 		register(EmployeeService.class);
 	}

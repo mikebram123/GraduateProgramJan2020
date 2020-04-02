@@ -7,16 +7,23 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.ws.rs.FormParam;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.springframework.data.annotation.Transient;
 
-
+@XmlRootElement
 @Entity // declared the class as entity, to be managed by JPA
 @Table(name="JPA_Transaction") //declare the table name associated with this class
 public class Transaction {
 
 	private int transactionId;
+	
+	@FormParam("amount")
 	private double amount;
+	
+	@FormParam("paymentType")
 	private String paymentType;
 	
 	Account linkedAccount;
@@ -30,6 +37,7 @@ public class Transaction {
 	@ManyToOne //One Employee is associated with one of the many departments 
 	@JoinColumn(name="fk_account_id") //the foreign key Column to store the associate deptno
 	@Transient
+	@XmlTransient
 	public Account getLinkedAccount() {
 		return linkedAccount;
 	}

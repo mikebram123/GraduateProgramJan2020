@@ -1,4 +1,4 @@
-package com.mastek.hrapp.apis;
+package com.mastek.BankApp.api;
 
 import java.util.Set;
 
@@ -12,38 +12,37 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.mastek.hrapp.entities.Employee;
-import com.mastek.hrapp.entities.Project;
+import com.mastek.BankApp.entities.Account;
+import com.mastek.BankApp.entities.Customer;
 
-@Path("/hrapp/")	//URL pattern to access the current API Interface
-public interface EmployeeAPI {
-
+@Path("/BankApp/")
+public interface CustomerAPI {
 	// http://localhost:7777/hrapp/employees/list
 	@GET		//we do support HTTP method: GET
-	@Path("/employees/list")	//URL Path to access this method
+	@Path("/customer/list")	//URL Path to access this method
 	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
-	public Iterable<Employee> listAllEmployees();
+	public Iterable<Customer> listAllCustomers();
 	
 	@GET //http method
-	@Path("/employees/find/{empno}")
+	@Path("/customer/find/{customerId}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Employee findByEmpno(@PathParam("empno")int empno);
+	public Customer findByCustomerId(@PathParam("customerId")int customerId);
 	
 	@POST //http method
-	@Path("/employees/register")
+	@Path("/customer/register")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Employee registerNewEmployee(@BeanParam Employee newEmployee);
+	public Customer registerNewCustomer(@BeanParam Customer newCustomer);
 	
 	@GET
-	@Path("/employees/projects/{empno}")
+	@Path("/customer/account/{customerId}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Set<Project> getEmployeeProjects(@PathParam("empno") int empno);
+	public Set<Account> getCustomerAccounts(@PathParam("customerId") int customerId);
 	
 	@POST
-	@Path("/employees/projects/register")
+	@Path("/customer/account/register")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Project registerProjectForEmployee(@FormParam("empno")int empno, @BeanParam Project newProject);
-	
+	public Account registerAccountForCustomer(@FormParam("customerId")int customerId, @BeanParam Account newAccount);
+
 }

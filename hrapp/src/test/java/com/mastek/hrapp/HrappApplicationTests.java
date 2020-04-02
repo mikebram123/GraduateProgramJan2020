@@ -226,7 +226,7 @@ class HrappApplicationTests {
 		assertTrue(emp.getProjectAssigned().size()>0,"Projects Assigned");
 	}
 	
-	@Test
+	//@Test
 	void testApplyForJobPosition() {
 		int jobId = 122;
 		int empno = 11;

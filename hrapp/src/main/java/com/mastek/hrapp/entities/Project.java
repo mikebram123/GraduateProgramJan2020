@@ -24,7 +24,7 @@ public class Project {
 	@FormParam("name")
 	private String name;
 	
-	@FormParam("customer name")
+	@FormParam("customerName")
 	private String customerName;
 	
 	Set<Employee> projectTeam = new HashSet<>();
